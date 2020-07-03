@@ -1,0 +1,9 @@
+*/Makefile
+*/CMake*
+*/cmake*
+*/*_autogen
+*/compile_commands.json
+*/.clangd
+**/.idea
+**/target
+**/node_modules
