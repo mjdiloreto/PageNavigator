@@ -2,10 +2,11 @@ const puppeteer = require('puppeteer'); // This requires an entire Chromium, and
 const fs = require('fs'); // for reading programs from disk.
 
 
-const log = fn => async(...args) => {
-    console.log('starting ' + fn.name);
+const log = (fn, name) => async(...args) => {
+    console.log('starting ' + name);
     const result = await fn(...args);
-    console.log('ending ' + fn.name);
+    console.log('result of ' + name + ' is ', result);
+    console.log('ending ' + name);
     return result;
 };
 
@@ -22,12 +23,13 @@ class PageNavigator {
         this.page_actions = {};
 
         // Common utilities I find useful
-        this.defAction("waitOneSecond", async context => await context.page.waitFor(1000));
-        this.defAction("screenshot", async (context, path) => await context.page.screenshot({path}));
+        this.defAction("waitOneSecond", async (context, lastResult) => {await context.page.waitFor(1000); return lastResult;});
+        this.defAction("screenshot", async (context, path, lastResult) => {await context.page.screenshot({path}); return lastResult;});
         this.defAction("returnToStartPage", async context => await context.page.goto(this.page));
         this.defAction("goto", async (context, pageURL) => await context.page.goto(page));
         this.defAction("tearDown", async context => await context.browser.close());
-        this.defAction("saveToFile", (context, filename, value) => fs.appendFile(filename, JSON.stringify(value), err => {if (err) throw err;}));
+        this.defAction("saveToFile", (context, filename, value) =>
+                       fs.appendFile(filename, JSON.stringify(value), err => {if (err) throw err;}));
         this.defAction("getElementText", async (context, selector) => {
             return await context.page.evaluate(() => {
                 // I want to say evaluate does not support ES6? I don't know why I think this.
@@ -53,7 +55,11 @@ class PageNavigator {
         });
         this.defAction("getElementTextByXPath", async (context, xPath) => {
             const elts = Array.from(await context.page.$x(xPath));
-            return elts.map(async elem => await context.page.evaluate(e => e.innerText, elem));
+            let texts = [];
+            for (elem of elts) {
+                texts.push(await context.page.evaluate(e => e.innerText, elem));
+            }
+            return texts;
         });
         // Should be uniquely identified by selector
         this.defAction("clickElement", async (context, selector) => await context.page.click(selector));
@@ -65,7 +71,9 @@ class PageNavigator {
     }
 
     async init() {
-        const browser = await puppeteer.launch();
+        // https://stackoverflow.com/questions/52553311/how-to-set-max-viewport-in-puppeteer
+        // Use the maximum viewport size instead of 800x600
+        const browser = await puppeteer.launch({defaultViewport: null});
         const page = await browser.newPage();
 
         this.context = {browser, page};
@@ -82,34 +90,36 @@ class PageNavigator {
         const program = [["returnToStartPage"]].concat(intersperse(actions, ["waitOneSecond"]).concat(["tearDown"]));
 
         return async () => {
-            program.reduce(async (lastResult, currentAction) => {
-                if (lastResult === this.voidSentinel) return this.voidSentinel;
-
+            let lastResult;
+            for (const currentAction of program) {
                 const actionName = currentAction[0];
                 const args = currentAction.slice(1);
                 const namedAction = this.page_actions[actionName];
                 if (namedAction) {
-                    // might return null or undefined
-                    // Always pass last result as last arg. No variadic functions acceptable as callbacks.
-                    return await namedAction(this.context, ...args, lastResult);
-                    // retry if error maybe?
-                    // else if actionName === "eval" ...?
+                    try {
+                       lastResult = await namedAction(this.context, ...args, lastResult);
+                    } catch (e) {
+                        console.log(e);
+                    }
                 } else {
-                    return this.voidSentinel;
+                    console.log("No action called " + currentAction);
+                    break;
                 }
-            },
-            null);
+            }
         };
     }
 }
 
 
-const unitNumberXPath = '//div[@id="unitstable"]/div[contains(@class, "unitrow")]/div[contains(@class, "tablecolumn")]/h5[1]';
-const minPriceXPath = '//div[@id="unitstable"]/div[contains(@class, "unitrow")]/div[contains(@class, "tablecolumn")]/span[contains(@class, "currency")][1]';
+//const unitNumberXPath = '//div[@id="unitstable"]/div[contains(@class, "unitrow")]/div[contains(@class, "tablecolumn")]/h5[1]';
+const unitNumberXPath = '//div[@id="unitstable"]';
+//const minPriceXPath = '//div[@id="unitstable"]/div[contains(@class, "unitrow")]/div[contains(@class, "tablecolumn")]/span[contains(@class, "currency")][1]';
+const minPriceXPath = '//div[contains(@class, "content")]/p';
 const maxPriceXPath = '//div[@id="unitstable"]/div[contains(@class, "unitrow")]/div[contains(@class, "tablecolumn")]/span[contains(@class, "currency")][2]';
 const datetime = new Date().toISOString();
 
 const actions = [
+    ["screenshot", "screenshot1.png"],
     ["getElementTextByXPath", unitNumberXPath],
     ["saveToFile", "unitNumber" + datetime + ".dat"],
 
@@ -118,14 +128,19 @@ const actions = [
 
     ["getElementTextByXPath", maxPriceXPath],
     ["saveToFile", "maxPrice" + datetime + ".dat"],
+    ["screenshot", "screenshot2.png"]
 ];
 
-console.log(datetime + " - Starting gables price check");
-const gablesNavigator = new PageNavigator("https://www.gables.com/communities/massachusetts/medford/re150/a1/");
-gablesNavigator.init();
-const gablesPriceChecker = gablesNavigator.sequence(actions);
-gablesPriceChecker();
-console.log(datetime + " - Ending gables price check");
+const main = async () => {
+    console.log(datetime + " - Starting gables price check");
+    const gablesNavigator = new PageNavigator("https://www.gables.com/communities/massachusetts/medford/re150/a1/");
+    await gablesNavigator.init();
+    const gablesPriceChecker = gablesNavigator.sequence(actions);
+    await gablesPriceChecker();
+    console.log(datetime + " - Ending gables price check");
+};
+
+main();
 
 // Mobile view (small viewport)
 /*
