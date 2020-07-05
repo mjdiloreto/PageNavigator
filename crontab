@@ -1,0 +1,54 @@
+# Edit this file to introduce tasks to be run by cron.
+#
+# Each task to run has to be defined through a single line
+# indicating with different fields when the task will be run
+# and what command to run for the task
+#
+# To define the time you can provide concrete values for
+# minute (m), hour (h), day of month (dom), month (mon),
+# and day of week (dow) or use '*' in these fields (for 'any').#
+# Notice that tasks will be started based on the cron's system
+# daemon's notion of time and timezones.
+#
+# Output of the crontab jobs (including errors) is sent through
+# email to the user the crontab file belongs to (unless redirected).
+#
+# For example, you can run a backup of all your user accounts
+# at 5 a.m every week with:
+# 0 5 * * 1 tar -zcf /var/backups/home.tgz /home/
+#
+# For more information see the manual pages of crontab(5) and cron(8)
+#
+# m h  dom mon dow   command
+
+#*/10 * * * * echo starting $(date) > ~/cron.log && cd ~/js_projects/cheater && node travianbot.js build --list ./upgradeList.json >> ~/cron.log
+#*/10 * * * * echo starting $(date) > ~/cron.log && cd ~/js_projects/cheater && node travianbot.js build --list ./upgradeCobol.json --village "02 Cobol" >> ~/cron.log
+#*/13 * * * * echo starting $(date) > ~/cron.log && cd ~/js_projects/cheater && node travianbot.js build --list ./upgradeList.json --village "01 Fortran" >> ~/cron.log
+
+#25 * * * * echo starting $(date) > ~/cron.log && cd ~/js_projects/cheater && node travianbot.js raid --list ./cobolFarms.json --village "02 Cobol" >> ~/cron.log
+
+#*/11 * * * * echo starting $(date) > ~/cron.log && cd ~/js_projects/cheater && node travianbot.js build --list ./upgradeX3.json --server https://ts80.travian.com --village "02 Cobol" >> ~/cron.log
+
+
+#35 * * * * echo starting $(date) > ~/cron.log && cd ~/js_projects/cheater && node travianbot.js raid --list ./farms/extra_farms.json --village "01 Fortran" >> ~/cron.log
+#*/20 * * * * echo starting $(date) > ~/cron.log && cd ~/js_projects/cheater && node travianbot.js send --from "02 Cobol" --to "00 C" --wood 150 --clay 300 --iron 120 --crop 0 >> ~/cron.log
+
+#*/6 * * * * echo starting $(date) > ~/cron.log && cd ~/js_projects/cheater && node travianbot.js build --list ./upgrade/upgradeC.json --village "00 C" >> ~/cron.log
+
+#*/12 * * * * echo starting $(date) > ~/cron.log && cd ~/js_projects/cheater && node travianbot.js send --server https://ts80.travian.com --from "02 Cobol" --to "01 Fortran" --wood 0 --clay 0 --iron 0 --crop 6000 --waittime 3000 >> ~/cron.log
+
+
+#*/8 * * * * echo starting $(date) > ~/cron.log && cd ~/js_projects/cheater && node travianbot.js raid --server https://ts80.travian.com --village "01 Fortran" --list ./farms/fortranX3Farms7x7.json >> ~/cron.log
+
+#*/12 * * * * echo starting $(date) > ~/cron.log && cd ~/js_projects/cheater && node travianbot.js raid --server https://ts80.travian.com --village "01 Fortran" --list ./farms/fortranX3Farms21x21.json >> ~/cron.log
+
+
+#*/10 * * * * echo starting $(date) > ~/cron.log && cd ~/js_projects/cheater && node travianbot.js raid --server https://ts80.travian.com --village "01 Fortran" --list ./farms/fortranX3FarmsBig.json --waittime 4000 >> ~/cron.log
+
+#*/10 * * * * echo starting $(date) > ~/cron.log && cd ~/js_projects/cheater && node travianbot.js raid --server https://ts80.travian.com --village "01 Fortran" --list ./farms/fortranX3FarmsBigDef.json --waittime 4000 >> ~/cron.log
+
+#*/13 * * * * echo starting $(date) > ~/cron.log && cd ~/js_projects/cheater && node travianbot.js send --server https://ts80.travian.com --from "01 Fortran" --to "03 Pascal" --wood 200 --clay 250 --iron 190 --crop 100 --waittime 3000 >> ~/cron.log
+
+#*/7 * * * * echo starting $(date) > ~/cron.log && cd ~/js_projects/cheater && node travianbot.js build --list ./upgrade/upgradeX3.json --server https://ts80.travian.com --village "03 Pascal" >> ~/cron.log
+
+*/30 * * * * echo starting $(date) > ~/Documents/projects/js_projects/apt-scrape/data/cron.log && cd ~/Documents/projects/js_projects/apt-scrape && node scrape-data.js >> ~/Documents/projects/js_projects/apt-scrape/data/cron.log 

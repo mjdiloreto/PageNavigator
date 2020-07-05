@@ -18,8 +18,6 @@ class PageNavigator {
         this.page = startPageURL;
         this.context = null;
 
-        this.voidSentinel = {secret: "My super secret sentinel, I hope no one ever returns this"};
-
         this.page_actions = {};
 
         // Common utilities I find useful
@@ -56,7 +54,7 @@ class PageNavigator {
         this.defAction("getElementTextByXPath", async (context, xPath) => {
             const elts = Array.from(await context.page.$x(xPath));
             let texts = [];
-            for (elem of elts) {
+            for (let elem of elts) {
                 texts.push(await context.page.evaluate(e => e.innerText, elem));
             }
             return texts;
@@ -111,24 +109,35 @@ class PageNavigator {
 }
 
 
-//const unitNumberXPath = '//div[@id="unitstable"]/div[contains(@class, "unitrow")]/div[contains(@class, "tablecolumn")]/h5[1]';
-const unitNumberXPath = '//div[@id="unitstable"]';
-//const minPriceXPath = '//div[@id="unitstable"]/div[contains(@class, "unitrow")]/div[contains(@class, "tablecolumn")]/span[contains(@class, "currency")][1]';
-const minPriceXPath = '//div[contains(@class, "content")]/p';
-const maxPriceXPath = '//div[@id="unitstable"]/div[contains(@class, "unitrow")]/div[contains(@class, "tablecolumn")]/span[contains(@class, "currency")][2]';
+// Via firefox -> inspect Element -> copy -> xPath
+// first unitNumber  ->   /html/body/div[3]/section[2]/div/div/div/div/div/div/div/div[1]/div/div[1]/p[1]
+// second unitNumber ->   /html/body/div[3]/section[2]/div/div/div/div/div/div/div/div[2]/div/div[1]/p[1]
+// unitNumber        ->   /html/body/div[3]/section[2]/div/div/div/div/div/div/div/div/div/div[1]/p[1]
+const unitNumberXPath =  '/html/body/div[3]/section[2]/div/div/div/div/div/div/div/div/div/div[1]/p[1]';
+
+// first minPrice    ->  /html/body/div[3]/section[2]/div/div/div/div/div/div/div/div[1]/div/div[1]/p[2]/span[1]
+// second minPrice   ->  /html/body/div[3]/section[2]/div/div/div/div/div/div/div/div[2]/div/div[1]/p[2]/span[1]
+// minPrice          ->  /html/body/div[3]/section[2]/div/div/div/div/div/div/div/div/div/div[1]/p[2]/span[1]
+const minPriceXPath  =  '/html/body/div[3]/section[2]/div/div/div/div/div/div/div/div/div/div[1]/p[2]/span[1]';
+
+// first maxPrice    ->  /html/body/div[3]/section[2]/div/div/div/div/div/div/div/div[1]/div/div[1]/p[2]/span[2]
+// second maxPrice   ->  /html/body/div[3]/section[2]/div/div/div/div/div/div/div/div[2]/div/div[1]/p[2]/span[2]
+// maxPrice          ->  /html/body/div[3]/section[2]/div/div/div/div/div/div/div/div/div/div[1]/p[2]/span[2]
+const maxPriceXPath  =  '/html/body/div[3]/section[2]/div/div/div/div/div/div/div/div/div/div[1]/p[2]/span[2]';
+
 const datetime = new Date().toISOString();
 
 const actions = [
-    ["screenshot", "screenshot1.png"],
+    //["screenshot", "screenshot1.png"],
     ["getElementTextByXPath", unitNumberXPath],
-    ["saveToFile", "unitNumber" + datetime + ".dat"],
+    ["saveToFile", "data/" + datetime + "unitNumber.dat"],
 
     ["getElementTextByXPath", minPriceXPath],
-    ["saveToFile", "minPrice" + datetime + ".dat"],
+    ["saveToFile", "data/" + datetime + "minPrice.dat"],
 
     ["getElementTextByXPath", maxPriceXPath],
-    ["saveToFile", "maxPrice" + datetime + ".dat"],
-    ["screenshot", "screenshot2.png"]
+    ["saveToFile", "data/" + datetime + "maxPrice.dat"],
+    //["screenshot", "screenshot2.png"]
 ];
 
 const main = async () => {
@@ -171,19 +180,19 @@ main();
   </div>
 */
 
-// Desktop view (larger viewport)
+// Desktop view (larger viewport, unused in this program)
 /*
   <div class="unitstable-component" id="unitstable">
    ...
     <div class="unitrow">
-    <div class="tablecolumn"><h5>131</h5></div>    <-- unit-number = '//div[@id="unitstable"]/div[contains(@class, "unitrow")]/div[contains(@class, "tablecolumn")]/h5[1]'
+    <div class="tablecolumn"><h5>131</h5></div>    <-- unit-number
         <div class="tablecolumn">
           <h5>
             <span class="currency">
               <!-- react-text: 1039 -->
               <!-- /react-text -->
               <!-- react-text: 1040 -->
-              2310                                 <-- min-price = '//div[@id="unitstable"]/div[contains(@class, "unitrow")]/div[contains(@class, "tablecolumn")]/span[contains(@class, "currency")][1]'
+              2310                                 <-- min-price
               <!-- /react-text -->
             </span>
               <!-- react-text: 1041 -->
@@ -193,7 +202,7 @@ main();
               <!-- react-text: 1043 -->
               <!-- /react-text -->
               <!-- react-text: 1044 -->
-              2745                                 <-- max-price = '//div[@id="unitstable"]/div[contains(@class, "unitrow")]/div[contains(@class, "tablecolumn")]/span[contains(@class, "currency")][2]'
+              2745                                 <-- max-price
               <!-- /react-text -->
             </span>
           </h5>
