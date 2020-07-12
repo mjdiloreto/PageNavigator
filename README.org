@@ -5,10 +5,10 @@ Eventually the fluctuating prices made me depressed so I found an apartment on C
 Might use it again sometime to interact with more pages.
 Don't actually use the crontab, just gives an idea for how to automate.
 
-* TODO
-** Feature parity with original script
-*** More idiomatic startup execution
-**** Change example to use it
-*** (Better) Clicking
-*** Typing
-*** Scrolling (if needed)
+** TO-DO
+*** Feature parity with original script
+**** More idiomatic startup execution
+***** Change example to use it
+**** (Better) Clicking
+**** Typing
+**** Scrolling (if needed)
