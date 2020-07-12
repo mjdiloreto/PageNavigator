@@ -1,0 +1,14 @@
+* PageNavigator
+Basic page navigation abstraction that I've found to be useful when paired with cron for automatic scheduled page scraping.
+Began as a script to cheat at [[https://www.travian.com][the browser game Travian]] but which I co-opted to scrape apartment prices from a local site.
+Eventually the fluctuating prices made me depressed so I found an apartment on Craigslist instead.
+Might use it again sometime to interact with more pages.
+Don't actually use the crontab, just gives an idea for how to automate.
+
+* TODO
+** Feature parity with original script
+*** More idiomatic startup execution
+**** Change example to use it
+*** (Better) Clicking
+*** Typing
+*** Scrolling (if needed)

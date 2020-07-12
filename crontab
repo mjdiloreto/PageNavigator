@@ -21,34 +21,5 @@
 #
 # m h  dom mon dow   command
 
-#*/10 * * * * echo starting $(date) > ~/cron.log && cd ~/js_projects/cheater && node travianbot.js build --list ./upgradeList.json >> ~/cron.log
-#*/10 * * * * echo starting $(date) > ~/cron.log && cd ~/js_projects/cheater && node travianbot.js build --list ./upgradeCobol.json --village "02 Cobol" >> ~/cron.log
-#*/13 * * * * echo starting $(date) > ~/cron.log && cd ~/js_projects/cheater && node travianbot.js build --list ./upgradeList.json --village "01 Fortran" >> ~/cron.log
-
-#25 * * * * echo starting $(date) > ~/cron.log && cd ~/js_projects/cheater && node travianbot.js raid --list ./cobolFarms.json --village "02 Cobol" >> ~/cron.log
-
-#*/11 * * * * echo starting $(date) > ~/cron.log && cd ~/js_projects/cheater && node travianbot.js build --list ./upgradeX3.json --server https://ts80.travian.com --village "02 Cobol" >> ~/cron.log
-
-
-#35 * * * * echo starting $(date) > ~/cron.log && cd ~/js_projects/cheater && node travianbot.js raid --list ./farms/extra_farms.json --village "01 Fortran" >> ~/cron.log
-#*/20 * * * * echo starting $(date) > ~/cron.log && cd ~/js_projects/cheater && node travianbot.js send --from "02 Cobol" --to "00 C" --wood 150 --clay 300 --iron 120 --crop 0 >> ~/cron.log
-
-#*/6 * * * * echo starting $(date) > ~/cron.log && cd ~/js_projects/cheater && node travianbot.js build --list ./upgrade/upgradeC.json --village "00 C" >> ~/cron.log
-
-#*/12 * * * * echo starting $(date) > ~/cron.log && cd ~/js_projects/cheater && node travianbot.js send --server https://ts80.travian.com --from "02 Cobol" --to "01 Fortran" --wood 0 --clay 0 --iron 0 --crop 6000 --waittime 3000 >> ~/cron.log
-
-
-#*/8 * * * * echo starting $(date) > ~/cron.log && cd ~/js_projects/cheater && node travianbot.js raid --server https://ts80.travian.com --village "01 Fortran" --list ./farms/fortranX3Farms7x7.json >> ~/cron.log
-
-#*/12 * * * * echo starting $(date) > ~/cron.log && cd ~/js_projects/cheater && node travianbot.js raid --server https://ts80.travian.com --village "01 Fortran" --list ./farms/fortranX3Farms21x21.json >> ~/cron.log
-
-
-#*/10 * * * * echo starting $(date) > ~/cron.log && cd ~/js_projects/cheater && node travianbot.js raid --server https://ts80.travian.com --village "01 Fortran" --list ./farms/fortranX3FarmsBig.json --waittime 4000 >> ~/cron.log
-
-#*/10 * * * * echo starting $(date) > ~/cron.log && cd ~/js_projects/cheater && node travianbot.js raid --server https://ts80.travian.com --village "01 Fortran" --list ./farms/fortranX3FarmsBigDef.json --waittime 4000 >> ~/cron.log
-
-#*/13 * * * * echo starting $(date) > ~/cron.log && cd ~/js_projects/cheater && node travianbot.js send --server https://ts80.travian.com --from "01 Fortran" --to "03 Pascal" --wood 200 --clay 250 --iron 190 --crop 100 --waittime 3000 >> ~/cron.log
-
-#*/7 * * * * echo starting $(date) > ~/cron.log && cd ~/js_projects/cheater && node travianbot.js build --list ./upgrade/upgradeX3.json --server https://ts80.travian.com --village "03 Pascal" >> ~/cron.log
-
+# run every 30 min (cronguru.com >> man page)
 */30 * * * * echo starting $(date) > ~/Documents/projects/js_projects/apt-scrape/data/cron.log && cd ~/Documents/projects/js_projects/apt-scrape && node scrape-data.js >> ~/Documents/projects/js_projects/apt-scrape/data/cron.log 
